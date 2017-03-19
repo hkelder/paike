@@ -1,3 +1,4 @@
 <resources>
     <dimen name="bottomnavigation_height">56dp</dimen>
+    <dimen name="textsize">20sp</dimen>
 </resources>
