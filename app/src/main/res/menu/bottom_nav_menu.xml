@@ -12,6 +12,6 @@
 
     <item
         android:id="@+id/menu_settings"
-        android:title="@string/accomodidation"
+        android:title="@string/accommodation"
         android:icon="@drawable/ic_local_hotel"/>
 </menu>
