@@ -8,16 +8,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.ViewHolder> {
 
-    Context adapterContext;
+    private Context adapterContext;
+    private ArrayList<Event> eventList;
 
 
-    public EventsListsAdapter(Context context) {
+    EventsListsAdapter(Context context, ArrayList<Event> eventList) {
         adapterContext = context;
+        this.eventList = eventList;
 
     }
 
@@ -36,11 +40,18 @@ class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.ViewHol
     @Override
     public void onBindViewHolder(EventsListsAdapter.ViewHolder holder, int position) {
 
+        Event event = eventList.get(position);
+        holder.day.setText(event.day);
+        holder.date.setText(event.date);
+        holder.heading.setText(event.heading);
+        holder.location.setText(event.location);
+        holder.category.setText(event.category);
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return eventList.size();
     }
 
 
@@ -58,9 +69,9 @@ class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.ViewHol
         @BindView(R.id.events_listitem_category)
         TextView category;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

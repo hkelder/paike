@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,7 +30,38 @@ public class EventsFragment extends Fragment {
         //määrab, kuidas kuvada erinevaid ridu
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recyclerView.setAdapter(new EventsListsAdapter(getActivity()));
+        ArrayList<Event> eventsList = new ArrayList();
+        /*Event event = new Event();
+        event.heading = "Placeholder";
+        event.category = "Category";
+        event.date = "Date";
+        event.day = "Day";
+        event.location = "Location";
+        eventsList.add(event);    see võrdub alumine rida*/
+
+        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
+        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
+        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
+        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
+        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
+        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
+        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
+        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
+        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
+        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
+
+
+        recyclerView.setAdapter(new EventsListsAdapter(getActivity(), eventsList));
         return view;
     }
 }
