@@ -10,7 +10,8 @@
         android:layout_height="75dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@drawable/ArensBurgHotell">
+        android:background="@drawable/ArensBurgHotell"
+        >
 
         <TextView
             android:id="@+id/food_listitem_heading"
