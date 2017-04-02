@@ -36,7 +36,7 @@
             android:layout_below="@+id/accomodation_listitem_subtitle"
             android:maxLines="2"
             android:text="Kõige soodsamad pakkumised Saaremaal. Parim hind garanteeritud!"
-            android:textColor="@color/lightBlack"
+            android:textColor="@color/black"
             android:textSize="13sp" />
 
 
