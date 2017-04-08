@@ -1,8 +1,15 @@
 package ee.kg.paike.saaremaapaike;
 
-/**
- * Created by ProoviAinult on 4/8/2017.
- */
+class Food {
 
-public class Food {
+    String heading;
+    String foodName;
+    String foodPrice;
+
+    Food(String heading, String foodName, String foodPrice) {
+
+        this.heading = heading;
+        this.foodName = foodName;
+        this.foodPrice = foodPrice;
+    }
 }
