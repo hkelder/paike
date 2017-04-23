@@ -1,4 +1,4 @@
-package ee.kg.paike.saaremaapaike;
+package ee.kg.paike.saaremaapaike.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import ee.kg.paike.saaremaapaike.R;
 
 public class FoodFragment extends Fragment {
 

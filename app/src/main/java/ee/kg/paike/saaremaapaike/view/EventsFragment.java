@@ -1,4 +1,4 @@
-package ee.kg.paike.saaremaapaike;
+package ee.kg.paike.saaremaapaike.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ee.kg.paike.saaremaapaike.R;
+import ee.kg.paike.saaremaapaike.model.Event;
+import ee.kg.paike.saaremaapaike.presenter.eventlist.EventsListsAdapter;
 
 public class EventsFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package ee.kg.paike.saaremaapaike;
+package ee.kg.paike.saaremaapaike.presenter.eventlist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,14 +12,16 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ee.kg.paike.saaremaapaike.R;
+import ee.kg.paike.saaremaapaike.model.Event;
 
-class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.ViewHolder> {
+public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.ViewHolder> {
 
     private Context adapterContext;
     private ArrayList<Event> eventList;
 
 
-    EventsListsAdapter(Context context, ArrayList<Event> eventList) {
+    public EventsListsAdapter(Context context, ArrayList<Event> eventList) {
         adapterContext = context;
         this.eventList = eventList;
 

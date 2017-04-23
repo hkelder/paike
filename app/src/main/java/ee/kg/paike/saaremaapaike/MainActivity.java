@@ -11,6 +11,9 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ee.kg.paike.saaremaapaike.view.AccommodationFragment;
+import ee.kg.paike.saaremaapaike.view.EventsFragment;
+import ee.kg.paike.saaremaapaike.view.FoodFragment;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navbottom)
