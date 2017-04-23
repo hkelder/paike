@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ee.kg.paike.saaremaapaike.R;
 import ee.kg.paike.saaremaapaike.model.Event;
+import ee.kg.paike.saaremaapaike.presenter.eventlist.EventListPresenter;
 import ee.kg.paike.saaremaapaike.presenter.eventlist.EventsListsAdapter;
 
 public class EventsFragment extends Fragment {
@@ -26,6 +27,8 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
         ButterKnife.bind(this, view);
+
+        new EventListPresenter(this).getMainPageHtml();
 
         //kuna see setting ei muuda layouti texti suurust, siis performance on parem
         recyclerView.setHasFixedSize(true);
