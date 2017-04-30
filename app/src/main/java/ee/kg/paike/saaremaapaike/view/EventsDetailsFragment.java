@@ -1,20 +1,30 @@
 package ee.kg.paike.saaremaapaike.view;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ee.kg.paike.saaremaapaike.MainActivity;
 import ee.kg.paike.saaremaapaike.R;
 import ee.kg.paike.saaremaapaike.model.Event;
+import ee.kg.paike.saaremaapaike.utils.HtmlUtil;
 
 public class EventsDetailsFragment extends Fragment {
 
@@ -29,6 +39,8 @@ public class EventsDetailsFragment extends Fragment {
     TextView location;
     @BindView(R.id.event_details_text)
     TextView description;
+    @BindView(R.id.event_details_progressbar)
+    ProgressBar progressBar;
     private Event openedEvent;
 
     public static EventsDetailsFragment newInstance(Event event) {
@@ -54,6 +66,7 @@ public class EventsDetailsFragment extends Fragment {
         category.setText(openedEvent.category);
         location.setText(openedEvent.location);
         description.setText("");
+        new GetEventDetailsAsyncTask().execute(openedEvent.link);
         return view;
     }
 
@@ -68,4 +81,40 @@ public class EventsDetailsFragment extends Fragment {
         super.onPause();
         ((MainActivity) getActivity()).showBackArrow(false);
     }
+
+    private class GetEventDetailsAsyncTask extends AsyncTask<String, String, String> {
+
+        String detailsResults = "";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                Document document = Jsoup.connect(urls[0]).get();
+                Element sisu = document.getElementById("sisu-single");
+                Elements children = sisu.children();
+                children.remove(0);
+                children.remove(0);
+                for (Element paragraph : children) {
+                    detailsResults += paragraph.toString() + "\n";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressBar.setVisibility(View.GONE);
+            description.setText(HtmlUtil.fromHtml(detailsResults));
+        }
+    }
 }
+
