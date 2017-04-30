@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,6 +30,9 @@ public class EventsFragment extends Fragment {
 
     @BindView(R.id.events_fragment_recycleview)
     RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +56,13 @@ public class EventsFragment extends Fragment {
     private class DownloadWebpageAsyncTask extends AsyncTask<String, String, String> {
 
         List<Event> eventList = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
 
         protected String doInBackground(String... urls) {
             try {
@@ -79,6 +90,8 @@ public class EventsFragment extends Fragment {
         }
 
         protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressBar.setVisibility(View.GONE);
             ((EventsListsAdapter) recyclerView.getAdapter()).addEvents(eventList);
         }
     }
