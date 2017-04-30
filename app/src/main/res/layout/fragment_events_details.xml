@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ghertjurjsrjry"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/header_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/events_details_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saaremaa Wellfest"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsize_extrabig"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/events_details_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:text="Pühapäev, 30.04.2017"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/textsize_big" />
+
+            <TextView
+                android:id="@+id/events_details_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:text="Saaremaa"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/textsize_medium" />
+
+            <TextView
+                android:id="@+id/events_details_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:text="Kategooria: Festival"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/textsize_medium" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header_container"
+            android:layout_margin="@dimen/padding_medium"
+            android:text="09:00 – Hommikujooga, Hotell Saaremaa Thalasso Spa 12:00 – Spaaremaa Wellfesti lõpetamine, turismihooaja avamine Kuressaare kesklinnas 13:00 – Lustakas orienteerumismäng algusega Kuressaare kesklinnas 13:00 – Dr. Adik Levini loeng, Hotell Saaremaa Thalasso Spa 14:00 – Maagilise kehakoorija ja huulepalsami valmistamine, Maagilised Seebid aadressil Rootsi tn 7 16:00 – Orienteerumismängu autasustamine, Grand Rose Spa Hotell 18:00 – Jooga – Hingamine kui meelerahu ja tervise alus, Hotell Saaremaa Thalasso Spa 18:00 – Keraamilise kausikese valmistamine saunatarvete jaoks, Riine Sooäär, Luha 7 Köik kena algab spaast ja saunast! 1200 spaakohta umbes 14 000 elaniku kohta teeb Kuressaarest tõenäoliselt maailma kõige spaa-tihedama linna mistõttu on meie saart juba ammu hüütud hellitusnimega Spaaremaa. Ja eks see Saaremaa ongi nagu üks suur mõnus spaa – puhas õhk, soe päike, head sportimisvõimalused looduses, lõõgastumis- ja terviseturgutusvõimalused spaades, teada-tuntud saaremaine toit laual. 2017. aasta Spaaremaa Wellfest toimub aprilli lõpus (26. – 30.04.2017) ja pakub tegevusi kogu perele!
+Vaata rohkem: www.saaremaasuvi.ee"
+            android:textSize="@dimen/textsize_smedium" />
+
+    </RelativeLayout>
+</ScrollView>

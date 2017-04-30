@@ -1,4 +1,13 @@
 <resources>
     <dimen name="bottomnavigation_height">56dp</dimen>
-    <dimen name="textsize">20sp</dimen>
+    <dimen name="textsize_extrabig">36sp</dimen>
+    <dimen name="textsize_big">24sp</dimen>
+    <dimen name="textsize_small">12sp</dimen>
+    <dimen name="textsize_smedium">14sp</dimen>
+    <dimen name="textsize_medium">18sp</dimen>
+
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_medium">10dp</dimen>
+    <dimen name="padding_large">20dp</dimen>
+
 </resources>

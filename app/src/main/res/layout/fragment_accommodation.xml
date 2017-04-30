@@ -10,7 +10,7 @@
         android:layout_centerInParent="true"
         android:text="Majutus"
         android:textAllCaps="true"
-        android:textSize="@dimen/textsize"
+        android:textSize="@dimen/textsize_big"
         android:textStyle="italic" />
 
 </RelativeLayout>
