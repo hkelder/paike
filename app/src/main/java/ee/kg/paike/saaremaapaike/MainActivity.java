@@ -27,20 +27,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        openFragment(new EventsFragment());
+        openFragment(new EventsFragment(), false);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_events:
-                        openFragment(new EventsFragment());
+                        openFragment(new EventsFragment(), false);
                         break;
                     case R.id.menu_food:
-                        openFragment(new FoodFragment());
+                        openFragment(new FoodFragment(), false);
                         break;
                     case R.id.menu_accommodation:
-                        openFragment(new AccommodationFragment());
+                        openFragment(new AccommodationFragment(), false);
                         break;
 
                 }
@@ -50,9 +50,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void openFragment(Fragment fragment) {
+    public void openFragment(Fragment fragment, boolean addToBackStack) {
         if (fragmentManager == null) fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_activity_holder, fragment).commit();
+        fragmentTransaction.replace(R.id.main_activity_holder, fragment);
+        if (addToBackStack) fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    public void showBackArrow(boolean show) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(show);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

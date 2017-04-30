@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ee.kg.paike.saaremaapaike.MainActivity;
 import ee.kg.paike.saaremaapaike.R;
 import ee.kg.paike.saaremaapaike.model.Event;
 import ee.kg.paike.saaremaapaike.presenter.eventlist.EventsListsAdapter;
@@ -48,7 +49,7 @@ public class EventsFragment extends Fragment {
         //määrab, kuidas kuvada erinevaid ridu
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recyclerView.setAdapter(new EventsListsAdapter(getActivity()));
+        recyclerView.setAdapter(new EventsListsAdapter((MainActivity) getActivity()));
         new DownloadWebpageAsyncTask().execute("http://saaremaasuvi.ee/");
         return view;
     }
