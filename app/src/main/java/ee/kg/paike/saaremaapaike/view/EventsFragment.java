@@ -1,6 +1,7 @@
 package ee.kg.paike.saaremaapaike.view;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,14 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ee.kg.paike.saaremaapaike.R;
-import ee.kg.paike.saaremaapaike.model.DownloadWebpageAsyncTask;
 import ee.kg.paike.saaremaapaike.model.Event;
-import ee.kg.paike.saaremaapaike.presenter.eventlist.EventListPresenter;
 import ee.kg.paike.saaremaapaike.presenter.eventlist.EventsListsAdapter;
 
 public class EventsFragment extends Fragment {
@@ -29,7 +35,7 @@ public class EventsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
         ButterKnife.bind(this, view);
 
-        new DownloadWebpageAsyncTask().execute("http://saaremaasuvi.ee/");
+
         //new EventListPresenter(this).getMainPageHtml();
 
         //kuna see setting ei muuda layouti texti suurust, siis performance on parem
@@ -38,39 +44,42 @@ public class EventsFragment extends Fragment {
         //määrab, kuidas kuvada erinevaid ridu
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ArrayList<Event> eventsList = new ArrayList();
-        /*Event event = new Event();
-        event.heading = "Placeholder";
-        event.category = "Category";
-        event.date = "Date";
-        event.day = "Day";
-        event.location = "Location";
-        eventsList.add(event);    see võrdub alumine rida*/
-
-        /*eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
-        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
-        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
-        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
-        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
-        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
-        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Coca-cola plaza", "Tallinn", "Film"));
-        eventsList.add(new Event("Pühapeav", "26.03", "Kaabeltau - saalijalgpalli Liiga mängud", "Kuressaare Spordikeskus", "Kategooria:Sport"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Tüdrukute käsitöötuba 'Salamärkmik'", "Saaremaa Veski", "Kategooria:Õpituba"));
-        eventsList.add(new Event("Esmaspäev", "27.03", "Doonoripäev", "Kuressaare Kutuurikeskus", "Kategooria: Muu"));
-        eventsList.add(new Event("Reede", "07.07", "Kiiktoolitund Merle Palmistega", "Kohvik Maiasmokk", "Kategooria: Muu"));
-        */
-
-
-        recyclerView.setAdapter(new EventsListsAdapter(getActivity(), eventsList));
+        recyclerView.setAdapter(new EventsListsAdapter(getActivity()));
+        new DownloadWebpageAsyncTask().execute("http://saaremaasuvi.ee/");
         return view;
+    }
+
+    private class DownloadWebpageAsyncTask extends AsyncTask<String, String, String> {
+
+        List<Event> eventList = new ArrayList<>();
+
+        protected String doInBackground(String... urls) {
+            try {
+                Document document = Jsoup.connect(urls[0]).get();
+                Element uritused = document.getElementById("uritused");
+                Elements uritusedList = uritused.select("li");
+
+                for (Element element : uritusedList) {
+                    String link = element.select("a").first().attr("href");
+                    String day = element.getElementById("paevanimi").text();
+                    String date = element.getElementById("kuupaev").text();
+                    String heading = element.getElementById("pealk").text();
+                    String location = element.getElementById("asukoht").text();
+                    String category = element.getElementById("kategooria").text();
+
+                    if (category.length() > 14) category = category.substring(14);
+
+                    eventList.add(new Event(link, day, date, heading, location, category));
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(String result) {
+            ((EventsListsAdapter) recyclerView.getAdapter()).addEvents(eventList);
+        }
     }
 }

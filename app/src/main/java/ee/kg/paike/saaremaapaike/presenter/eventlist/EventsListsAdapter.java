@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,13 +19,16 @@ import ee.kg.paike.saaremaapaike.model.Event;
 public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.ViewHolder> {
 
     private Context adapterContext;
-    private ArrayList<Event> eventList;
+    private List<Event> eventList = new ArrayList<>();
 
 
-    public EventsListsAdapter(Context context, ArrayList<Event> eventList) {
+    public EventsListsAdapter(Context context) {
         adapterContext = context;
-        this.eventList = eventList;
+    }
 
+    public void addEvents(List<Event> eventList) {
+        this.eventList = eventList;
+        notifyDataSetChanged();
     }
 
     @Override
