@@ -85,7 +85,9 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
                     int position = getAdapterPosition();
                     if (position == RecyclerView.NO_POSITION) return;
                     Event clickedEvent = eventList.get(position);
-                    adapterContext.openFragment(new EventsDetailsFragment(), true);
+                    EventsDetailsFragment fragment = EventsDetailsFragment.newInstance(clickedEvent);
+
+                    adapterContext.openFragment(fragment, true);
 
                 }
             });
