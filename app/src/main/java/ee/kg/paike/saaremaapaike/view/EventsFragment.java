@@ -40,9 +40,6 @@ public class EventsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
         ButterKnife.bind(this, view);
 
-
-        //new EventListPresenter(this).getMainPageHtml();
-
         //kuna see setting ei muuda layouti texti suurust, siis performance on parem
         recyclerView.setHasFixedSize(true);
 
