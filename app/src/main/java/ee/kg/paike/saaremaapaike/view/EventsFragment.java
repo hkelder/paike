@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.bumptech.glide.Glide;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,11 +32,14 @@ import ee.kg.paike.saaremaapaike.presenter.eventlist.EventsListsAdapter;
 
 public class EventsFragment extends Fragment {
 
+    public static String imagesBaseUrl = "http://saaremaasuvi.ee/wp-content/themes/saaremaasuvi/";
+
     @BindView(R.id.events_fragment_recycleview)
     RecyclerView recyclerView;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-
+    @BindView(R.id.events_header_image)
+    ImageView headerImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -51,9 +57,16 @@ public class EventsFragment extends Fragment {
         return view;
     }
 
+    public void loadHeaderImage(String url) {
+        if (url == null || url.isEmpty() || headerImage == null) return;
+        Glide.with(this).load(url).fitCenter()
+                .placeholder(R.drawable.bg_kevad).error(R.drawable.bg_kevad).into(headerImage);
+    }
+
     private class DownloadWebpageAsyncTask extends AsyncTask<String, String, String> {
 
         List<Event> eventList = new ArrayList<>();
+        String headerImageUrl = "";
 
         @Override
         protected void onPreExecute() {
@@ -64,6 +77,10 @@ public class EventsFragment extends Fragment {
 
         protected String doInBackground(String... urls) {
             try {
+                Document css = Jsoup.connect("http://saaremaasuvi.ee/wp-content/themes/saaremaasuvi/style.css").get();
+                String cssElement = getCssIdElementFromDocument(css, "taust");
+                headerImageUrl = getUrlFromElement(cssElement);
+
                 Document document = Jsoup.connect(urls[0]).get();
                 Element uritused = document.getElementById("uritused");
                 Elements uritusedList = uritused.select("li");
@@ -78,8 +95,10 @@ public class EventsFragment extends Fragment {
 
                     if (category.length() > 14) category = category.substring(14);
 
-                    eventList.add(new Event(link, day, date, heading, location, category));
+                    eventList.add(new Event(link, day, date, heading, location, category, headerImageUrl));
                 }
+
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -90,7 +109,25 @@ public class EventsFragment extends Fragment {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressBar.setVisibility(View.GONE);
+            loadHeaderImage(headerImageUrl);
             ((EventsListsAdapter) recyclerView.getAdapter()).addEvents(eventList);
+        }
+
+        private String getCssIdElementFromDocument(Document document, String elementName) {
+            String[] cssElements = document.toString().split("#");
+            for (String element : cssElements) {
+                if (element.startsWith(elementName)) return element;
+            }
+            return null;
+        }
+
+        private String getUrlFromElement(String element) {
+            String[] parameters = element.split(";");
+            for (String parameter : parameters) {
+                if (parameter.contains("background:url"))
+                    return imagesBaseUrl + parameter.substring(parameter.indexOf("(") + 1, parameter.indexOf(")"));
+            }
+            return null;
         }
     }
 }

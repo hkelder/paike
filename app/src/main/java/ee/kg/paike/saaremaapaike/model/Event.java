@@ -8,8 +8,9 @@ public class Event {
     public String heading;
     public String location;
     public String category;
+    public String imageUrl;
 
-    public Event(String link, String day, String date, String heading, String location, String category) {
+    public Event(String link, String day, String date, String heading, String location, String category, String imageUrl) {
 
         this.link = link;
         this.day = day;
@@ -17,10 +18,12 @@ public class Event {
         this.heading = heading;
         this.location = location;
         this.category = category;
+        this.imageUrl = imageUrl;
     }
 
     @Override
     public String toString() {
-        return "Link: " + link + " Päev: " + day + "Kuupäev: " + date + "Pealkiri: " + heading + "Asukoht: " + location + "Kategooria: " + category;
+        return "Link: " + link + " Päev: " + day + " Kuupäev: " + date + " Pealkiri: " + heading + " Asukoht: " + location + " Kategooria: " + category + " Pildi link" + imageUrl;
     }
 }
+

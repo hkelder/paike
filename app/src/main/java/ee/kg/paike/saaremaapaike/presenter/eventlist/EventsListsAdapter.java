@@ -36,7 +36,7 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
     public EventsListsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //teeb uue info rea
         LinearLayout row = (LinearLayout) LayoutInflater.from(adapterContext)
-                .inflate(R.layout.events_lists, parent, false);
+                .inflate(R.layout.events_listitem, parent, false);
 
         //teeb inforeast viewHolderi
         ViewHolder eventListsViewHolder = new ViewHolder(row);
