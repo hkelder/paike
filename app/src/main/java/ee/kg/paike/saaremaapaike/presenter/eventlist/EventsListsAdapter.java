@@ -1,11 +1,18 @@
 package ee.kg.paike.saaremaapaike.presenter.eventlist;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +42,7 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
     @Override
     public EventsListsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //teeb uue info rea
-        LinearLayout row = (LinearLayout) LayoutInflater.from(adapterContext)
+        RelativeLayout row = (RelativeLayout) LayoutInflater.from(adapterContext)
                 .inflate(R.layout.events_listitem, parent, false);
 
         //teeb inforeast viewHolderi
@@ -48,11 +55,22 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
     public void onBindViewHolder(EventsListsAdapter.ViewHolder holder, int position) {
 
         Event event = eventList.get(position);
-        holder.day.setText(event.day);
-        holder.date.setText(event.date);
-        holder.heading.setText(event.heading);
-        holder.location.setText(event.location);
-        holder.category.setText(event.category);
+        Log.d("!!!!!!!!!", event.toString());
+        if (event.type == Event.ListItemType.EVENT) {
+            holder.imageView.setVisibility(View.GONE);
+            holder.eventLayout.setVisibility(View.VISIBLE);
+            holder.day.setText(event.day);
+            holder.date.setText(event.date);
+            holder.heading.setText(event.heading);
+            holder.location.setText(event.location);
+            holder.category.setText(event.category);
+        } else if (event.type == Event.ListItemType.PROMOTION) {
+            holder.imageView.setVisibility(View.VISIBLE);
+            holder.eventLayout.setVisibility(View.GONE);
+            if (event.promotionLink == null || event.promotionLink.isEmpty())
+                return;
+            Glide.with(adapterContext).load(event.promotionLink).into(holder.imageView);
+        }
 
     }
 
@@ -75,6 +93,10 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
         TextView location;
         @BindView(R.id.events_listitem_category)
         TextView category;
+        @BindView(R.id.events_promotion_image)
+        ImageView imageView;
+        @BindView(R.id.events_listitem_event_layout)
+        LinearLayout eventLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -85,9 +107,14 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
                     int position = getAdapterPosition();
                     if (position == RecyclerView.NO_POSITION) return;
                     Event clickedEvent = eventList.get(position);
-                    EventsDetailsFragment fragment = EventsDetailsFragment.newInstance(clickedEvent);
+                    if (clickedEvent.type == Event.ListItemType.EVENT) {
+                        EventsDetailsFragment fragment = EventsDetailsFragment.newInstance(clickedEvent);
+                        adapterContext.openFragment(fragment, true);
+                    } else if (clickedEvent.type == Event.ListItemType.PROMOTION) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(clickedEvent.promotionUrl));
+                        adapterContext.startActivity(browserIntent);
+                    }
 
-                    adapterContext.openFragment(fragment, true);
 
                 }
             });

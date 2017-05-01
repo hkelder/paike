@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/events_header_image"
-        android:overScrollMode="never"
-        android:paddingRight="@dimen/padding_medium" />
+        android:overScrollMode="never" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

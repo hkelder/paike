@@ -47,7 +47,7 @@ public class EventsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //kuna see setting ei muuda layouti texti suurust, siis performance on parem
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
 
         //määrab, kuidas kuvada erinevaid ridu
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -65,7 +65,7 @@ public class EventsFragment extends Fragment {
 
     private class DownloadWebpageAsyncTask extends AsyncTask<String, String, String> {
 
-        List<Event> eventList = new ArrayList<>();
+        ArrayList<Event> eventList = new ArrayList<>();
         String headerImageUrl = "";
 
         @Override
@@ -82,22 +82,8 @@ public class EventsFragment extends Fragment {
                 headerImageUrl = getUrlFromElement(cssElement);
 
                 Document document = Jsoup.connect(urls[0]).get();
-                Element uritused = document.getElementById("uritused");
-                Elements uritusedList = uritused.select("li");
-
-                for (Element element : uritusedList) {
-                    String link = element.select("a").first().attr("href");
-                    String day = element.getElementById("paevanimi").text();
-                    String date = element.getElementById("kuupaev").text();
-                    String heading = element.getElementById("pealk").text();
-                    String location = element.getElementById("asukoht").text();
-                    String category = element.getElementById("kategooria").text();
-
-                    if (category.length() > 14) category = category.substring(14);
-
-                    eventList.add(new Event(link, day, date, heading, location, category, headerImageUrl));
-                }
-
+                parseListItemsFromHtml(document);
+                parseAdsFromHtml(document);
 
 
             } catch (IOException e) {
@@ -128,6 +114,51 @@ public class EventsFragment extends Fragment {
                     return imagesBaseUrl + parameter.substring(parameter.indexOf("(") + 1, parameter.indexOf(")"));
             }
             return null;
+        }
+
+        private void parseListItemsFromHtml(Document document) {
+
+            Element uritused = document.getElementById("uritused");
+            Elements uritusedList = uritused.select("li");
+
+            for (Element element : uritusedList) {
+                String link = element.select("a").first().attr("href");
+                String day = element.getElementById("paevanimi").text();
+                String date = element.getElementById("kuupaev").text();
+                String heading = element.getElementById("pealk").text();
+                String location = element.getElementById("asukoht").text();
+                String category = element.getElementById("kategooria").text();
+
+                if (category.length() > 14) category = category.substring(14);
+
+                eventList.add(Event.createEventItem(link, day, date, heading, location, category, headerImageUrl));
+            }
+
+        }
+
+        private void parseAdsFromHtml(Document document) {
+            List<Event> promotionList = new ArrayList<>();
+
+            Elements slides = document.select("ul.slides > li");
+            for (Element element : slides) {
+                String link = element.select("a").first().attr("href");
+                String img = element.select("img").first().attr("src");
+                promotionList.add(Event.createPromotionItem(link, img));
+            }
+            addPromotionToEventList(promotionList);
+        }
+
+        private void addPromotionToEventList(List<Event> promotionList) {
+            if (eventList == null || eventList.size() < 3)
+                return;
+
+            int promotionsLooperCounter = 0;
+            for (int promotionsPositionCounter = 3; eventList.size() > promotionsPositionCounter; promotionsPositionCounter += 10) {
+                if (promotionsLooperCounter == 3) promotionsLooperCounter = 0;
+                eventList.add(promotionsPositionCounter, promotionList.get(promotionsLooperCounter));
+                promotionsPositionCounter += 10;
+                promotionsLooperCounter += 1;
+            }
         }
     }
 }
