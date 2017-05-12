@@ -7,9 +7,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import org.jsoup.Jsoup;
@@ -41,6 +43,8 @@ public class EventsDetailsFragment extends Fragment {
     TextView description;
     @BindView(R.id.event_details_progressbar)
     ProgressBar progressBar;
+    @BindView(R.id.events_details_header_image)
+    ImageView headerImage;
     private Event openedEvent;
 
     public static EventsDetailsFragment newInstance(Event event) {
@@ -61,6 +65,8 @@ public class EventsDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events_details, container, false);
         ButterKnife.bind(this, view);
+        Glide.with(this).load(openedEvent.imageUrl).fitCenter()
+                .placeholder(R.drawable.bg_kevad).error(R.drawable.bg_kevad).into(headerImage);
         heading.setText(openedEvent.heading);
         day.setText(openedEvent.day + ", " + openedEvent.date);
         category.setText(openedEvent.category);
