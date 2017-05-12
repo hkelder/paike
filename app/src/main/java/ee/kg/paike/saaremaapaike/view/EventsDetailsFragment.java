@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.google.gson.Gson;
 
 import org.jsoup.Jsoup;
@@ -47,6 +48,9 @@ public class EventsDetailsFragment extends Fragment {
     ImageView headerImage;
     private Event openedEvent;
 
+    @BindView(R.id.observable_scroll_view)
+    ObservableScrollView scrollView;
+
     public static EventsDetailsFragment newInstance(Event event) {
         EventsDetailsFragment fragment = new EventsDetailsFragment();
         Bundle arguments = new Bundle();
@@ -64,15 +68,22 @@ public class EventsDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events_details, container, false);
+
         ButterKnife.bind(this, view);
+
+        ((MainActivity)getActivity()).setScrollViewCallbacks(scrollView);
+
         Glide.with(this).load(openedEvent.imageUrl).fitCenter()
-                .placeholder(R.drawable.bg_kevad).error(R.drawable.bg_kevad).into(headerImage);
+            .placeholder(R.drawable.bg_kevad).error(R.drawable.bg_kevad).into(headerImage);
+
         heading.setText(openedEvent.heading);
         day.setText(openedEvent.day + ", " + openedEvent.date);
         category.setText(openedEvent.category);
         location.setText(openedEvent.location);
         description.setText("");
+
         new GetEventDetailsAsyncTask().execute(openedEvent.link);
+
         return view;
     }
 

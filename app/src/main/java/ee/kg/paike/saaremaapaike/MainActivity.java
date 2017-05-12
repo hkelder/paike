@@ -6,8 +6,13 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,11 +20,13 @@ import ee.kg.paike.saaremaapaike.view.AccommodationFragment;
 import ee.kg.paike.saaremaapaike.view.EventsFragment;
 import ee.kg.paike.saaremaapaike.view.FoodFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ObservableScrollViewCallbacks{
     @BindView(R.id.navbottom)
     BottomNavigationView bottomNavigationView;
 
     private FragmentManager fragmentManager;
+
+    private ObservableScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,5 +78,35 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setScrollViewCallbacks(ObservableScrollView scrollView) {
+        scrollView.setScrollViewCallbacks(this);
+
+        this.scrollView = scrollView;
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+        ActionBar ab = getSupportActionBar();
+        if (scrollState == ScrollState.UP) {
+            if (ab.isShowing()) {
+                ab.hide();
+            }
+        } else if (scrollState == ScrollState.DOWN) {
+            if (!ab.isShowing()) {
+                ab.show();
+            }
+        }
     }
 }
