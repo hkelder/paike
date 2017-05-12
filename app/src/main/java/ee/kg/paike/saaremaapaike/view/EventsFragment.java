@@ -154,7 +154,7 @@ public class EventsFragment extends Fragment {
 
             int promotionsLooperCounter = 0;
             for (int promotionsPositionCounter = 3; eventList.size() > promotionsPositionCounter; promotionsPositionCounter += 10) {
-                if (promotionsLooperCounter == 3) promotionsLooperCounter = 0;
+                if (promotionsLooperCounter == promotionList.size()) promotionsLooperCounter = 0;
                 eventList.add(promotionsPositionCounter, promotionList.get(promotionsLooperCounter));
                 promotionsPositionCounter += 10;
                 promotionsLooperCounter += 1;

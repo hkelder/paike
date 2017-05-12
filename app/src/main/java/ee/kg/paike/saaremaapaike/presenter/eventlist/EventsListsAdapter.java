@@ -55,7 +55,7 @@ public class EventsListsAdapter extends RecyclerView.Adapter<EventsListsAdapter.
     public void onBindViewHolder(EventsListsAdapter.ViewHolder holder, int position) {
 
         Event event = eventList.get(position);
-        Log.d("!!!!!!!!!", event.toString());
+
         if (event.type == Event.ListItemType.EVENT) {
             holder.imageView.setVisibility(View.GONE);
             holder.eventLayout.setVisibility(View.VISIBLE);

@@ -64,17 +64,12 @@ public class FoodFragment extends Fragment {
                 Elements titleElements = doc.select("div.left_column > a > div > div:eq(2)");
                 Elements menuContainers = doc.select("div.left_column > a > div > div:eq(1)");
 
-                Log.d("TITLE ELEMENTS SIZE", titleElements.size() + "");
-                Log.d("MENU ELEMENTS SIZE", menuContainers.size() + "");
-
                 for (int i = 0; i < titleElements.size(); i++) {
                     String placeName = titleElements.get(i).text();
                     List<FoodPlaceMenuItem> menuItemList = new ArrayList<FoodPlaceMenuItem>();
 
                     Element menuContainer = menuContainers.get(i);
                     Elements menuItems = menuContainer.select(":root > div:gt(1)");
-
-                    Log.d("TOTAL MENU ITEMS", menuItems.size() + "");
 
                     for (int j = 0; j < menuItems.size(); j++) {
                         Element menuItem = menuItems.get(j);
@@ -91,9 +86,6 @@ public class FoodFragment extends Fragment {
                         price = price.replace(',', '.');
 
                         menuItemList.add(new FoodPlaceMenuItem(food, Double.parseDouble(price)));
-
-                        Log.d("FOOD", food);
-                        Log.d("PRICE", price);
                     }
 
                     foodPlaces.add(new FoodPlace(placeName, menuItemList));
