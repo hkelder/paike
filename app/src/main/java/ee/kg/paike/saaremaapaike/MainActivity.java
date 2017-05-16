@@ -6,16 +6,20 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.nineoldandroids.view.ViewHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ee.kg.paike.saaremaapaike.pojo.ParallaxImageData;
 import ee.kg.paike.saaremaapaike.view.AccommodationFragment;
 import ee.kg.paike.saaremaapaike.view.EventsFragment;
 import ee.kg.paike.saaremaapaike.view.FoodFragment;
@@ -24,15 +28,21 @@ public class MainActivity extends AppCompatActivity implements ObservableScrollV
     @BindView(R.id.navbottom)
     BottomNavigationView bottomNavigationView;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private FragmentManager fragmentManager;
 
-    private ObservableScrollView scrollView;
+    private ParallaxImageData parallaxImageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        setTitle("");
 
         openFragment(new EventsFragment(), false);
 
@@ -55,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements ObservableScrollV
             }
         });
 
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
     }
 
     public void openFragment(Fragment fragment, boolean addToBackStack) {
@@ -80,15 +94,26 @@ public class MainActivity extends AppCompatActivity implements ObservableScrollV
         return super.onOptionsItemSelected(item);
     }
 
-    public void setScrollViewCallbacks(ObservableScrollView scrollView) {
-        scrollView.setScrollViewCallbacks(this);
+    public void setScrollViewCallbacks(ParallaxImageData parallaxImageData) {
+        parallaxImageData.mScrollView.setScrollViewCallbacks(this);
 
-        this.scrollView = scrollView;
+        this.parallaxImageData = parallaxImageData;
     }
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        View imageContainer = parallaxImageData.mImageContainer;
+        View logo = parallaxImageData.mLogoView;
 
+        imageContainer.bringToFront();
+
+        if (scrollY > 250) {
+            ViewHelper.setTranslationY(imageContainer, scrollY - 250);
+        } else {
+            ViewHelper.setTranslationY(imageContainer, 0);
+        }
+
+        ViewHelper.setTranslationY(logo, Math.min(scrollY, 250));
     }
 
     @Override
@@ -98,15 +123,6 @@ public class MainActivity extends AppCompatActivity implements ObservableScrollV
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-        ActionBar ab = getSupportActionBar();
-        if (scrollState == ScrollState.UP) {
-            if (ab.isShowing()) {
-                ab.hide();
-            }
-        } else if (scrollState == ScrollState.DOWN) {
-            if (!ab.isShowing()) {
-                ab.show();
-            }
-        }
+
     }
 }

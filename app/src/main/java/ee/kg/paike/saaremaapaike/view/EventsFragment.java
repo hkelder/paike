@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,23 +30,40 @@ import butterknife.ButterKnife;
 import ee.kg.paike.saaremaapaike.MainActivity;
 import ee.kg.paike.saaremaapaike.R;
 import ee.kg.paike.saaremaapaike.model.Event;
+import ee.kg.paike.saaremaapaike.pojo.ParallaxImageData;
 import ee.kg.paike.saaremaapaike.presenter.eventlist.EventsListsAdapter;
 
 public class EventsFragment extends Fragment {
 
     public static String imagesBaseUrl = "http://saaremaasuvi.ee/wp-content/themes/saaremaasuvi/";
 
+    @BindView(R.id.events_observable_scroll_view)
+    ObservableScrollView scrollView;
+
     @BindView(R.id.events_fragment_recycleview)
     RecyclerView recyclerView;
+
+    @BindView(R.id.images_container)
+    RelativeLayout imageContainer;
+
+    ImageView headerImage;
+
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    @BindView(R.id.events_header_image)
-    ImageView headerImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
         ButterKnife.bind(this, view);
+
+        headerImage = (ImageView) imageContainer.findViewById(R.id.header_image);
+
+        ParallaxImageData parallaxImageData = new ParallaxImageData();
+        parallaxImageData.mScrollView = scrollView;
+        parallaxImageData.mImageContainer = imageContainer;
+        parallaxImageData.mLogoView = imageContainer.findViewById(R.id.header_logo);
+
+        ((MainActivity)getActivity()).setScrollViewCallbacks(parallaxImageData);
 
         //kuna see setting ei muuda layouti texti suurust, siis performance on parem
         recyclerView.setHasFixedSize(false);
@@ -59,8 +78,13 @@ public class EventsFragment extends Fragment {
 
     public void loadHeaderImage(String url) {
         if (url == null || url.isEmpty() || headerImage == null) return;
-        Glide.with(this).load(url).fitCenter()
-                .placeholder(R.drawable.bg_kevad).error(R.drawable.bg_kevad).into(headerImage);
+
+        Glide
+            .with(getActivity())
+            .load(url)
+            .centerCrop()
+            .into(headerImage);
+
     }
 
     private class DownloadWebpageAsyncTask extends AsyncTask<String, String, String> {

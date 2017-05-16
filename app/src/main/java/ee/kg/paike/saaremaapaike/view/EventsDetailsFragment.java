@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ee.kg.paike.saaremaapaike.MainActivity;
+import ee.kg.paike.saaremaapaike.pojo.ParallaxImageData;
 import ee.kg.paike.saaremaapaike.R;
 import ee.kg.paike.saaremaapaike.model.Event;
 import ee.kg.paike.saaremaapaike.utils.HtmlUtil;
@@ -32,6 +34,10 @@ import ee.kg.paike.saaremaapaike.utils.HtmlUtil;
 public class EventsDetailsFragment extends Fragment {
 
     private static final String ARG_KEY_EVENT = "ARG_KEY_EVENT";
+
+    @BindView(R.id.observable_scroll_view)
+    ObservableScrollView scrollView;
+
     @BindView(R.id.events_details_heading)
     TextView heading;
     @BindView(R.id.events_details_day)
@@ -42,14 +48,17 @@ public class EventsDetailsFragment extends Fragment {
     TextView location;
     @BindView(R.id.event_details_text)
     TextView description;
+
+    @BindView(R.id.images_container)
+    RelativeLayout imagesContainer;
+
+    ImageView headerImage;
+    ImageView logo;
+
     @BindView(R.id.event_details_progressbar)
     ProgressBar progressBar;
-    @BindView(R.id.events_details_header_image)
-    ImageView headerImage;
-    private Event openedEvent;
 
-    @BindView(R.id.observable_scroll_view)
-    ObservableScrollView scrollView;
+    private Event openedEvent;
 
     public static EventsDetailsFragment newInstance(Event event) {
         EventsDetailsFragment fragment = new EventsDetailsFragment();
@@ -71,7 +80,15 @@ public class EventsDetailsFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        ((MainActivity)getActivity()).setScrollViewCallbacks(scrollView);
+        headerImage = (ImageView) imagesContainer.findViewById(R.id.header_image);
+        logo = (ImageView) imagesContainer.findViewById(R.id.header_logo);
+
+        ParallaxImageData callbackData = new ParallaxImageData();
+        callbackData.mImageContainer = imagesContainer;
+        callbackData.mLogoView = logo;
+        callbackData.mScrollView = scrollView;
+
+        ((MainActivity)getActivity()).setScrollViewCallbacks(callbackData);
 
         Glide.with(this).load(openedEvent.imageUrl).fitCenter()
             .placeholder(R.drawable.bg_kevad).error(R.drawable.bg_kevad).into(headerImage);
